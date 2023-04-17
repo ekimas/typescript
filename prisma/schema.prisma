@@ -10,9 +10,64 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Dish {
+  id          Int         @id @default(autoincrement())
+  name        String?
+  description String?
+  price       Int
+  category    Category?   @relation(fields: [categoryId], references: [id])
+  categoryId  Int?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  OrderDish   OrderDish[]
+}
+
+model Category {
+  id        Int      @id @default(autoincrement())
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  Dish      Dish[]
+}
+
+model Order {
+  id          Int         @id @default(autoincrement())
+  tableNumber Int         @default(0)
+  totalPrice  Int
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  closedAt    DateTime
+  OrderDish   OrderDish[]
+  Payment     Payment[]
+}
+
+model OrderDish {
+  id        Int      @id @default(autoincrement())
+  order     Order?   @relation(fields: [orderId], references: [id])
+  orderId   Int?
+  dish      Dish?    @relation(fields: [dishId], references: [id])
+  dishId    Int?
+  price     Int
+  count     Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Payment {
+  id        Int      @id @default(autoincrement())
+  order     Order?   @relation(fields: [orderId], references: [id])
+  orderId   Int?
+  method    String
+  amount    Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model User {
-    id  String  @id
-    email   String  @unique
-    name    String?
-    password    String
+  id        Int      @id @default(autoincrement())
+  name      String?
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
