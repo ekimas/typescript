@@ -1,14 +1,26 @@
 import express from 'express'
-import getStatus from './status/get.status'
+import getUserStatus from './status/get.user.status'
+import getCompaniesStatus from './status/get.company.status'
 import postUser from './user/post.user'
 import loginUser from './user/login.user'
+import deleteUser from './user/delete.user'
+import postCompany from './company/post.company'
+import postEvent from './event/post.event'
 
 const router = express.Router()
 // home page route
 router.get('/', (req, res) => {
     res.send('Example home page')
 })
-const apiRoutes = [getStatus, postUser, loginUser]
+const apiRoutes = [
+    getCompaniesStatus,
+    getUserStatus,
+    postUser,
+    loginUser,
+    deleteUser,
+    postEvent,
+    postCompany,
+]
 apiRoutes.forEach((route) =>
     router[route.method](route.path, route.validators, route.handler),
 )
