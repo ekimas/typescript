@@ -12,7 +12,7 @@ datasource db {
 
 model Company {
   id        Int      @id @default(autoincrement())
-  name      String
+  name      String   @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -39,8 +39,8 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  company   Company  @relation(fields: [companyId], references: [id])
-  companyId Int
+  company   Company?  @relation(fields: [companyId], references: [id])
+  companyId Int?
   events    EventsOnUsers[]
 }
 
