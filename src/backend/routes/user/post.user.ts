@@ -1,7 +1,6 @@
 import { Request, Response } from 'express'
 import { body } from 'express-validator'
 import { StatusCodes } from 'http-status-codes'
-import { v4 } from 'uuid'
 
 import { prisma } from '../../database'
 import { TRoute } from '../types'
@@ -26,14 +25,24 @@ export default {
             responseSuccessStatus: StatusCodes.CREATED,
             messages: { uniqueConstraintFailed: 'Email must be unique.' },
             execute: async () => {
-                const { email, name, password } = req.body
+                const { email, name, password, companyId, eventIds } = req.body
                 const passwordHash = createHash(password, SALT)
-                return await prisma.user.create({
+
+                return prisma.user.create({
                     data: {
-                        id: v4(),
                         name,
                         email,
                         password: passwordHash,
+                        company: {
+                            connect: {
+                                id: companyId,
+                            },
+                        },
+                        events: {
+                            connect: eventIds.map((eventId: number) => ({
+                                id: eventId,
+                            })),
+                        },
                     },
                 })
             },
