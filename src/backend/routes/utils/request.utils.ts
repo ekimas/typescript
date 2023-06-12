@@ -37,7 +37,9 @@ export const handleRequest = async <Entity>({
         console.error(err)
         const parsedError = err as TCustomError
         if (parsedError.isCustomError) {
-            res.status(parsedError.status).json({ errors: [parsedError.message]})
+            res.status(parsedError.status).json({
+                errors: [parsedError.message],
+            })
         } else {
             const response = checkPrismaError(err, messages)
             res.status(response.status).json({
